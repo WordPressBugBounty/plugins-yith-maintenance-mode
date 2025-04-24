@@ -41,6 +41,9 @@ if ( ! class_exists( 'YITH_Maintenance' ) ) {
 		 * @since 1.0.0
 		 */
 		public function __construct() {
+
+			add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
+
 			if ( is_admin() ) {
 				$this->obj = new YITH_Maintenance_Admin( $this->version );
 			} else {
@@ -48,6 +51,16 @@ if ( ! class_exists( 'YITH_Maintenance' ) ) {
 			}
 
 			return $this->obj;
+		}
+
+		/**
+		 * Loads the plugin's text domain for translation.
+		 *
+		 * @return void
+		 * @since 1.7.5
+		 */
+		public function load_plugin_textdomain() {
+			load_plugin_textdomain( 'yith-maintenance-mode', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 		}
 	}
 }

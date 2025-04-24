@@ -27,15 +27,6 @@ if ( ! class_exists( 'YITH_Maintenance_Admin' ) ) {
 		public $version;
 
 		/**
-		 * Parameters for add_submenu_page
-		 *
-		 * @since  1.0.0
-		 * @var array
-		 * @access public
-		 */
-		public $submenu = array();
-
-		/**
 		 * Initial Options definition:
 		 *
 		 * @since  1.0.0
@@ -66,30 +57,49 @@ if ( ! class_exists( 'YITH_Maintenance_Admin' ) ) {
 		 *
 		 * @param string $version The version number.
 		 *
-		 * @return YITH_Maintenance_Admin
 		 * @since 1.0.0
 		 */
 		public function __construct( $version ) {
 
 			$this->version = $version;
-			$this->submenu = apply_filters(
-				'yith_maintenance_submenu',
-				array(
-					'themes.php',
-					__( 'YITH Maintenance Mode', 'yith-maintenance-mode' ),
-					__( 'Maintenance Mode', 'yith-maintenance-mode' ),
-					'administrator',
-					'yith-maintenance-mode',
-				)
-			);
 
-			add_action( 'init', array( $this, 'load_default_options' ) );
-			add_action( 'init', array( $this, 'init_panel' ) );
-			add_action( 'init', array( $this, 'default_options' ) );
+			add_action( 'init', array( $this, 'load_options' ), 5 );
+			add_action( 'init', array( $this, 'default_options' ), 10 );
+			add_action( 'init', array( $this, 'init_panel' ), 15 );
 			add_action( 'update_option_yith_maintenance_skin', array( $this, 'update_option' ), 10, 2 );
 			add_filter( 'plugin_action_links_' . plugin_basename( dirname( __FILE__ ) . '/init.php' ), array( $this, 'action_links' ) );
 
-			return $this;
+		}
+
+		/**
+		 * Get submenu data.
+		 */
+		public function get_submenu_data() {
+			static $data = null;
+			if ( is_null( $data ) ) {
+				$data = apply_filters(
+					'yith_maintenance_submenu',
+					array(
+						'themes.php',
+						__( 'YITH Maintenance Mode', 'yith-maintenance-mode' ),
+						__( 'Maintenance Mode', 'yith-maintenance-mode' ),
+						'administrator',
+						'yith-maintenance-mode',
+					)
+				);
+			}
+
+			return $data;
+		}
+
+		/**
+		 * Load options
+		 *
+		 * @return void
+		 * @since 1.0.0
+		 */
+		public function load_options() {
+			require_once 'yith-mm-options.php';
 		}
 
 		/**
@@ -113,8 +123,8 @@ if ( ! class_exists( 'YITH_Maintenance_Admin' ) ) {
 		 * @since  1.0.0
 		 */
 		public function default_options() {
-			global $yith_maintenance_options;
-			$this->options = apply_filters( 'yith_maintenance_options', $yith_maintenance_options );
+			$this->load_default_options();
+
 			foreach ( $this->options as $tab ) {
 				foreach ( $tab['sections'] as $section ) {
 					foreach ( $section['fields'] as $id => $value ) {
@@ -134,7 +144,7 @@ if ( ! class_exists( 'YITH_Maintenance_Admin' ) ) {
 		 */
 		public function init_panel() {
 			$this->panel = new YITH_Panel(
-				$this->submenu,
+				$this->get_submenu_data(),
 				$this->options,
 				array(
 					'url' => '',
@@ -156,8 +166,10 @@ if ( ! class_exists( 'YITH_Maintenance_Admin' ) ) {
 		 */
 		public function action_links( $links ) {
 
+			$submenu_data = $this->get_submenu_data();
+
 			$plugin_links = array(
-				'<a href="' . admin_url( $this->submenu[0] . '?page=' . $this->submenu[4] ) . '">' . __( 'Settings', 'yith-maintenance-mode' ) . '</a>',
+				'<a href="' . admin_url( $submenu_data[0] . '?page=' . $submenu_data[4] ) . '">' . __( 'Settings', 'yith-maintenance-mode' ) . '</a>',
 				'<a href="' . $this->doc_url . '">' . __( 'Docs', 'yith-maintenance-mode' ) . '</a>',
 			);
 
@@ -174,8 +186,8 @@ if ( ! class_exists( 'YITH_Maintenance_Admin' ) ) {
 		 * @return void
 		 */
 		public function update_option( $oldvalue, $newvalue ) {
-
 			global $yith_maintenance_options;
+
 			if ( $oldvalue !== $newvalue ) {
 
 				$options = include YITH_MAINTENANCE_DIR . "assets/skins/$newvalue.php";

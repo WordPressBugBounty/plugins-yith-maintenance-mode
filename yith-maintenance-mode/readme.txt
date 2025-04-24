@@ -3,8 +3,8 @@
 Contributors: yithemes
 Tags: maintenance, construction, maintenance page, wordpress maintenance mode, yith
 Requires at least: 6.4
-Tested up to: 6.6
-Stable tag: 1.10.1
+Tested up to: 6.8
+Stable tag: 1.10.4
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -72,6 +72,18 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 5. General settings
 
 == Changelog ==
+
+= 1.10.4 - Released: 24 April, 2025 =
+
+* New: support for WordPress 6.8
+
+= 1.10.3 - Released: 19 December, 2024 =
+
+* Fix: Fixed some compatibility issues
+
+= 1.10.2 - Released: 18 December, 2024 =
+
+* New: support for WordPress 6.7.1
 
 = 1.10.1 - Released: 31 July, 2024 =
 

@@ -3,7 +3,7 @@
  * Plugin Name: YITH Maintenance Mode
  * Plugin URI: https://yithemes.com/themes/plugins/yith-maintenance-mode/
  * Description: YITH Maintenance Mode allows you to add a maintenance page and customize it.
- * Version: 1.10.1
+ * Version: 1.10.4
  * Author: YITH <plugins@yithemes.com>
  * Author URI: http://yithemes.com/
  * Text Domain: yith-maintenance-mode
@@ -11,7 +11,7 @@
  *
  * @author  YITH <plugins@yithemes.com>
  * @package YITH Maintenance Mode
- * @version 1.10.1
+ * @version 1.10.4
  */
 
 /**  Copyright 2013-2024  YITH  (email : plugins@yithemes.com)
@@ -34,11 +34,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 } // Exit if accessed directly
 
 /* Include common functions */
-if ( ! defined( 'YITH_FUNCTIONS' ) ) {
+if ( ! defined( 'YITH_FUNCTIONS_YMM' ) ) {
+	define( 'YITH_FUNCTIONS_YMM', true );
 	require_once 'yit-common/yit-functions.php';
 }
-
-load_plugin_textdomain( 'yith-maintenance-mode', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
 ! defined( 'YITH_MAINTENANCE' ) && define( 'YITH_MAINTENANCE', true );
 define( 'YITH_MAINTENANCE_URL', plugin_dir_url( __FILE__ ) );
@@ -46,7 +45,6 @@ define( 'YITH_MAINTENANCE_DIR', plugin_dir_path( __FILE__ ) );
 
 // Load required classes and functions.
 require_once 'functions.yith-mm.php';
-require_once 'yith-mm-options.php';
 require_once 'class.yith-mm-admin.php';
 require_once 'class.yith-mm-frontend.php';
 require_once 'class.yith-mm.php';
